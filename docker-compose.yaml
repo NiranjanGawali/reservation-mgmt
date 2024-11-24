@@ -1,0 +1,14 @@
+services:
+  reservations:
+    build:
+      context: .
+      dockerfile: ./apps/reservations/Dockerfile
+      target: development
+    command: pnpm run start:dev # You may not need this if CMD is already set
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/usr/src/app # This allows code changes in the local file system to sync with the container
+      - /usr/src/app/node_modules # This ensures node_modules is not overwritten by the volume
+  mongo:
+    image: mongo
