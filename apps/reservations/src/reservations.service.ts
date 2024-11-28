@@ -9,8 +9,8 @@ export class ReservationsService {
     private readonly reservationsRepository: ReservationsRepository,
   ) {}
 
-  create(createReservationDto: CreateReservationDto, userId: string) {
-    return this.reservationsRepository.create({
+  async create(createReservationDto: CreateReservationDto, userId: string) {
+    return await this.reservationsRepository.create({
       ...createReservationDto,
       timestamp: new Date(),
       userId,

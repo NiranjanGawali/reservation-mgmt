@@ -1,5 +1,5 @@
 import { CanActivate, ExecutionContext, Inject } from '@nestjs/common';
-import { map, Observable, tap } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 import { AUTH_SERVICE } from '../constants';
 import { ClientProxy } from '@nestjs/microservices';
 import { UserDto } from '../dto';
@@ -11,16 +11,21 @@ export class JwtAuthGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const jwt = context.switchToHttp().getRequest().cookies?.Authentication;
+    console.log('JWT ');
+    console.log(jwt);
+
     if (!jwt) {
       return false;
     }
-    this.authClient
-      .send<UserDto>('authenticate', {
-        Authentication: jwt,
-      })
+    return this.authClient
+      .send<UserDto>('authenticate', { Authentication: jwt })
       .pipe(
         tap((res) => {
           context.switchToHttp().getRequest().user = res;
+        }),
+        catchError((err) => {
+          console.error('Microservice error:', err);
+          return of(false); // Return false to deny access on error
         }),
         map(() => true),
       );

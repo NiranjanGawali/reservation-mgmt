@@ -39,6 +39,7 @@ services:
       - ./apps/auth/.env
     ports:
       - '3001:3001'
+      - '3002:3002'
     # volumes:
     #   - .:/usr/src/app # This allows code changes in the local file system to sync with the container
     #   - /usr/src/app/node_modules # This ensures node_modules is not overwritten by the volume
