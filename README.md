@@ -100,20 +100,25 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 
 ---
 
-Another docker-compse file
-
 services:
 reservations:
 build:
 context: .
 dockerfile: ./apps/reservations/Dockerfile
 target: development
-command: pnpm run start:dev reservations
+command: pnpm run start:dev reservations # You may not need this if CMD is already set
+env_file: - ./apps/reservations/.env
 ports: - '3000:3000'
-volumes: - .:/usr/src/app
-environment: - MONGO_URI=mongodb://mongo:27017/mydatabase # MongoDB connection string using service name "mongo"
-
+volumes: - .:/usr/src/app # This allows code changes in the local file system to sync with the container - /usr/src/app/node_modules # This ensures node_modules is not overwritten by the volume
+auth:
+build:
+context: .
+dockerfile: ./apps/auth/Dockerfile
+target: development
+command: pnpm run start:dev auth # You may not need this if CMD is already set
+env_file: - ./apps/auth/.env
+ports: - '3001:3001'
+volumes: - .:/usr/src/app # This allows code changes in the local file system to sync with the container - /usr/src/app/node_modules # This ensures node_modules is not overwritten by the volume
 mongo:
 image: mongo
-container_name: mongo
-ports: - "27017:27017" # Expose the default MongoDB port (optional)
+ports: - '27018:27017'

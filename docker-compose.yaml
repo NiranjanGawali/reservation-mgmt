@@ -4,11 +4,62 @@ services:
       context: .
       dockerfile: ./apps/reservations/Dockerfile
       target: development
-    command: pnpm run start:dev # You may not need this if CMD is already set
+    command: pnpm run start:dev reservations # You may not need this if CMD is already set
+    env_file:
+      - ./apps/reservations/.env
     ports:
       - '3000:3000'
-    volumes:
-      - .:/usr/src/app # This allows code changes in the local file system to sync with the container
-      - /usr/src/app/node_modules # This ensures node_modules is not overwritten by the volume
+    # volumes:
+    #   - .:/usr/src/app # This allows code changes in the local file system to sync with the container
+    #   - /usr/src/app/node_modules # This ensures node_modules is not overwritten by the volume
+    develop:
+      watch:
+        # Sync changes in the source code
+        - action: sync
+          path: ./apps/reservations
+          target: /usr/src/app/apps/reservations
+          ignore:
+            - node_modules/
+
+        # Rebuild if package.json changes
+        - action: rebuild
+          path: ./package.json
+
+        # Optionally restart when config files like .env change (if needed)
+        - action: sync+restart
+          path: ./apps/reservations/.env
+          target: /usr/src/app/apps/reservations/.env
+  auth:
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    command: pnpm run start:dev auth # You may not need this if CMD is already set
+    env_file:
+      - ./apps/auth/.env
+    ports:
+      - '3001:3001'
+    # volumes:
+    #   - .:/usr/src/app # This allows code changes in the local file system to sync with the container
+    #   - /usr/src/app/node_modules # This ensures node_modules is not overwritten by the volume
+    develop:
+      watch:
+        # Sync changes in the source code
+        - action: sync
+          path: ./apps/auth
+          target: /usr/src/app/apps/auth
+          ignore:
+            - node_modules/
+
+        # Rebuild if package.json changes
+        - action: rebuild
+          path: ./package.json
+
+        # Optionally restart when config files like .env change (if needed)
+        - action: sync+restart
+          path: ./apps/auth/.env
+          target: /usr/src/app/apps/auth/.env
   mongo:
     image: mongo
+    ports:
+      - '27018:27017'
