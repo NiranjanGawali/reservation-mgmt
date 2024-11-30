@@ -23,11 +23,11 @@ export class JwtAuthGuard implements CanActivate {
         tap((res) => {
           context.switchToHttp().getRequest().user = res;
         }),
+        map(() => true),
         catchError((err) => {
           console.error('Microservice error:', err);
           return of(false); // Return false to deny access on error
         }),
-        map(() => true),
       );
   }
 }
