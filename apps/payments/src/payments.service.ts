@@ -1,7 +1,9 @@
-import { CheckoutPayment } from '@app/core-lib';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { NOTIFICATIONS_SERVICE } from '@app/core-lib';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ClientProxy } from '@nestjs/microservices';
 import { validatePaymentVerification } from 'razorpay/dist/utils/razorpay-utils';
+import { CreateCheckoutDto } from './dto/create-checkout.dto';
 // import Razorpay from 'razorpay';
 const Razorpay = require('razorpay');
 
@@ -9,14 +11,18 @@ const Razorpay = require('razorpay');
 export class PaymentsService {
   private readonly razorpay: any;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    private readonly configService: ConfigService,
+    @Inject(NOTIFICATIONS_SERVICE)
+    private readonly notificationService: ClientProxy,
+  ) {
     this.razorpay = new Razorpay({
       key_id: this.configService.get('RAZORPAY_API_KEY'),
       key_secret: this.configService.get('RAZORPAY_API_SECRET'),
     });
   }
 
-  async checkOut({ amount }: CheckoutPayment) {
+  async checkOut({ amount, email }: CreateCheckoutDto) {
     try {
       const options = {
         amount: amount * 100,
@@ -28,6 +34,12 @@ export class PaymentsService {
 
       const order = await this.razorpay.orders.create(options);
       console.log('Order : ', order);
+
+      // calling notification service
+      this.notificationService.emit('notify_email', {
+        email,
+        text: `Your payment of rupees ${amount} has completed successfully !!!`,
+      });
 
       return order;
     } catch (err) {

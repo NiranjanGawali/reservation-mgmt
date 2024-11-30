@@ -27,10 +27,7 @@ export class ReservationsController {
     if (!user) {
       throw new BadRequestException('Please provide with valid token');
     }
-    return await this.reservationsService.create(
-      createReservationDto,
-      user._id,
-    );
+    return await this.reservationsService.create(createReservationDto, user);
   }
 
   @UseGuards(JwtAuthGuard)

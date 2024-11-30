@@ -93,6 +93,35 @@ services:
           path: ./apps/payments/.env
           target: /usr/src/app/apps/payments/.env
 
+  notifications:
+    build:
+      context: .
+      dockerfile: ./apps/notifications/Dockerfile
+      target: development
+    command: pnpm run start:dev notifications # You may not need this if CMD is already set
+    env_file:
+      - ./apps/notifications/.env
+    # volumes:
+    #   - .:/usr/src/app # This allows code changes in the local file system to sync with the container
+    #   - /usr/src/app/node_modules # This ensures node_modules is not overwritten by the volume
+    develop:
+      watch:
+        # Sync changes in the source code
+        - action: sync
+          path: ./apps/notifications
+          target: /usr/src/app/apps/notifications
+          ignore:
+            - node_modules/
+
+        # Rebuild if package.json changes
+        - action: rebuild
+          path: ./package.json
+
+        # Optionally restart when config files like .env change (if needed)
+        - action: sync+restart
+          path: ./apps/notifications/.env
+          target: /usr/src/app/apps/notifications/.env
+
   mongo:
     image: mongo
     ports:
