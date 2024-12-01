@@ -70,3 +70,6 @@ steps:
         'push',
         'asia-south1-docker.pkg.dev/reservationmanagment/payments/production',
       ]
+
+options:
+  logging: CLOUD_LOGGING_ONLY
