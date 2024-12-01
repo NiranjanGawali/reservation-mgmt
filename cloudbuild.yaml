@@ -1,6 +1,6 @@
 steps:
-  # Reservation section
-  - name: 'grc.io/cloud-builder/docker'
+  # Reservations
+  - name: 'gcr.io/cloud-builders/docker'
     args:
       [
         'build',
@@ -10,15 +10,15 @@ steps:
         'apps/reservations/Dockerfile',
         '.',
       ]
-  - name: 'grc.io/cloud-builder/docker'
+  - name: 'gcr.io/cloud-builders/docker'
     args:
       [
         'push',
-        'asia-south1-docker.pkg.dev/reservationmanagment/reservations/production',
+        asia-south1-docker.pkg.dev/reservationmanagment/reservations/production',
       ]
 
-  # Auth section
-  - name: 'grc.io/cloud-builder/docker'
+  # Auth
+  - name: 'gcr.io/cloud-builders/docker'
     args:
       [
         'build',
@@ -28,33 +28,33 @@ steps:
         'apps/auth/Dockerfile',
         '.',
       ]
-  - name: 'grc.io/cloud-builder/docker'
+  - name: 'gcr.io/cloud-builders/docker'
     args:
       [
         'push',
         'asia-south1-docker.pkg.dev/reservationmanagment/auth/production',
       ]
 
-  # Notifications section
-  - name: 'grc.io/cloud-builder/docker'
+  # Notifications
+  - name: 'gcr.io/cloud-builders/docker'
     args:
       [
         'build',
         '-t',
-        'asia-south1-docker.pkg.dev/reservationmanagment/notifications/production',
+        asia-south1-docker.pkg.dev/reservationmanagment/notifications/production',
         '-f',
         'apps/notifications/Dockerfile',
         '.',
       ]
-  - name: 'grc.io/cloud-builder/docker'
+  - name: 'gcr.io/cloud-builders/docker'
     args:
       [
         'push',
         'asia-south1-docker.pkg.dev/reservationmanagment/notifications/production',
       ]
 
-  # Payments section
-  - name: 'grc.io/cloud-builder/docker'
+  # Payments
+  - name: 'gcr.io/cloud-builders/docker'
     args:
       [
         'build',
@@ -64,7 +64,7 @@ steps:
         'apps/payments/Dockerfile',
         '.',
       ]
-  - name: 'grc.io/cloud-builder/docker'
+  - name: 'gcr.io/cloud-builders/docker'
     args:
       [
         'push',
