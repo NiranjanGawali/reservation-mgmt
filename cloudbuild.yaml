@@ -41,7 +41,7 @@ steps:
       [
         'build',
         '-t',
-        asia-south1-docker.pkg.dev/reservationmanagment/notifications/production',
+        'asia-south1-docker.pkg.dev/reservationmanagment/notifications/production',
         '-f',
         'apps/notifications/Dockerfile',
         '.',
