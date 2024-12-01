@@ -122,3 +122,25 @@ volumes: - .:/usr/src/app # This allows code changes in the local file system to
 mongo:
 image: mongo
 ports: - '27018:27017'
+
+/\*
+
+project-root/
+├── apps/
+│ ├── reservations/
+│ │ ├── src/
+│ │ ├── tsconfig.app.json
+│ │ ├── tsconfig.json
+│ ├── payments/
+│ │ ├── src/
+│ │ ├── tsconfig.app.json
+│ │ ├── tsconfig.json
+│ ├── notifications/
+│ ├── src/
+│ ├── tsconfig.app.json
+│ ├── tsconfig.json
+├── libs/
+├── tsconfig.base.json
+├── package.json
+
+\*/

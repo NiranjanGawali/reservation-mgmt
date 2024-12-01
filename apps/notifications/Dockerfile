@@ -5,17 +5,22 @@ FROM node:alpine AS development
 WORKDIR /usr/src/app
 
 # Copy only the package.json and pnpm-lock.yaml to optimize caching
-COPY package.json pnpm-lock.yaml ./
+COPY package.json ./
+COPY pnpm-lock.yaml ./
+COPY tsconfig.json tsconfig.json
+COPY nest-cli.json nest-cli.json
 
 # Install pnpm and dependencies
 RUN npm install -g pnpm
 RUN pnpm install
 
 # Copy the remaining application files
-COPY . .
+# COPY . .
+COPY apps/notifications apps/notifications
+COPY libs libs
 
 # Build the application
-RUN pnpm run build
+RUN pnpm run build notifications
 
 # Production Stage
 FROM node:alpine AS production

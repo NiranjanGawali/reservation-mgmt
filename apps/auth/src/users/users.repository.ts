@@ -1,6 +1,6 @@
 import { AbstractRepository } from '@app/core-lib';
 import { Injectable, Logger } from '@nestjs/common';
-import { UserDocument } from './models/users.schema';
+import { UserDocument } from '@app/core-lib';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
