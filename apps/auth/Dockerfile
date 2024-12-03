@@ -5,15 +5,15 @@ WORKDIR /usr/src/app
 
 # Copy package.json and yarn.lock
 COPY package.json ./ 
-COPY yarn.lock ./ 
+COPY pnpm-lock.yaml ./
 COPY tsconfig.json tsconfig.json
 COPY nest-cli.json nest-cli.json
 
 # Install Yarn using Alpine's package manager
-RUN apk add --no-cache yarn
+RUN npm install -g pnpm
 
 # Install dependencies using Yarn
-RUN yarn install
+RUN pnpm install
 
 # Copy application code
 COPY apps/auth apps/auth
@@ -35,14 +35,13 @@ WORKDIR /usr/src/app
 
 # Copy package.json and yarn.lock again for production
 COPY package.json ./ 
-COPY yarn.lock ./ 
+COPY pnpm-lock.yaml ./
 
 # Install Yarn in the production environment
-RUN apk add --no-cache yarn
+RUN npm install -g pnpm
 
 # Install only production dependencies with Yarn
-RUN yarn install --prod
-
+RUN pnpm install --prod
 # Copy the built app from the development stage
 COPY --from=development /usr/src/app/dist ./dist
 
