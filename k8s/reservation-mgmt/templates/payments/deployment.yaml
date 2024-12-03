@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: payments
+  name: payments
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payments
+  template:
+    metadata:
+      labels:
+        app: payments
+    spec:
+      containers:
+      - image: asia-south1-docker.pkg.dev/reservationmanagment/payments/production
+        name: payments
+        env:
+          - name: PAYMENTS_TCP_PORT
+            value: '3003'
+          - name: PAYMENTS_HTTP_PORT
+            value: '3004'
+          - name: NOTIFICATIONS_HOST
+            value: 'notifications'
+          - name: NOTIFICATIONS_PORT
+            value: '3005'
+          - name: RAZORPAY_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: razorpay
+                key: apiKey 
+          - name: RAZORPAY_API_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: razorpay
+                key: apiSecret
+        ports:
+          - containerPort: 3003
+          - containerPort: 3004
