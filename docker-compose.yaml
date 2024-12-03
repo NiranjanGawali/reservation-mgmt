@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: ./apps/reservations/Dockerfile
       target: development
-    command: pnpm run start:dev reservations # You may not need this if CMD is already set
+    command: yarn run start:dev reservations # Changed from pnpm to yarn
     env_file:
       - ./apps/reservations/.env
     ports:
@@ -29,12 +29,13 @@ services:
         - action: sync+restart
           path: ./apps/reservations/.env
           target: /usr/src/app/apps/reservations/.env
+
   auth:
     build:
       context: .
       dockerfile: ./apps/auth/Dockerfile
       target: development
-    command: pnpm run start:dev auth # You may not need this if CMD is already set
+    command: yarn run start:dev auth # Changed from pnpm to yarn
     env_file:
       - ./apps/auth/.env
     ports:
@@ -66,7 +67,7 @@ services:
       context: .
       dockerfile: ./apps/payments/Dockerfile
       target: development
-    command: pnpm run start:dev payments # You may not need this if CMD is already set
+    command: yarn run start:dev payments # Changed from pnpm to yarn
     env_file:
       - ./apps/payments/.env
     ports:
@@ -98,7 +99,7 @@ services:
       context: .
       dockerfile: ./apps/notifications/Dockerfile
       target: development
-    command: pnpm run start:dev notifications # You may not need this if CMD is already set
+    command: yarn run start:dev notifications # Changed from pnpm to yarn
     env_file:
       - ./apps/notifications/.env
     # volumes:

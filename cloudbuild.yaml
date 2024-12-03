@@ -1,0 +1,75 @@
+steps:
+  # Reservations
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'build',
+        '-t',
+        'asia-south1-docker.pkg.dev/reservationmanagment/reservations/production',
+        '-f',
+        'apps/reservations/Dockerfile',
+        '.',
+      ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'push',
+        'asia-south1-docker.pkg.dev/reservationmanagment/reservations/production',
+      ]
+
+  # Auth
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'build',
+        '-t',
+        'asia-south1-docker.pkg.dev/reservationmanagment/auth/production',
+        '-f',
+        'apps/auth/Dockerfile',
+        '.',
+      ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'push',
+        'asia-south1-docker.pkg.dev/reservationmanagment/auth/production',
+      ]
+
+  # Notifications
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'build',
+        '-t',
+        'asia-south1-docker.pkg.dev/reservationmanagment/notifications/production',
+        '-f',
+        'apps/notifications/Dockerfile',
+        '.',
+      ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'push',
+        'asia-south1-docker.pkg.dev/reservationmanagment/notifications/production',
+      ]
+
+  # Payments
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'build',
+        '-t',
+        'asia-south1-docker.pkg.dev/reservationmanagment/payments/production',
+        '-f',
+        'apps/payments/Dockerfile',
+        '.',
+      ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'push',
+        'asia-south1-docker.pkg.dev/reservationmanagment/payments/production',
+      ]
+
+options:
+  logging: CLOUD_LOGGING_ONLY

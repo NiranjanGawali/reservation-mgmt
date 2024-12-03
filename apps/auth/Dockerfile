@@ -1,21 +1,21 @@
 # Development Stage
 FROM node:alpine AS development
 
-# Set the working directory
 WORKDIR /usr/src/app
 
-# Copy only the package.json and pnpm-lock.yaml to optimize caching
-COPY package.json ./
-COPY pnpm-lock.yaml ./
+# Copy package.json and yarn.lock
+COPY package.json ./ 
+COPY yarn.lock ./ 
 COPY tsconfig.json tsconfig.json
 COPY nest-cli.json nest-cli.json
 
-# Install pnpm and dependencies
-RUN npm install -g pnpm
-RUN pnpm install
+# Install Yarn using Alpine's package manager
+RUN apk add --no-cache yarn
 
-# Copy the remaining application files
-# COPY . .
+# Install dependencies using Yarn
+RUN yarn install
+
+# Copy application code
 COPY apps/auth apps/auth
 COPY libs libs
 
@@ -26,24 +26,25 @@ RUN cd apps/auth && pnpm install
 RUN pnpm run build auth
 
 # Production Stage
-FROM node:alpine AS production
+FROM node:alpine as production
 
-# Set environment to production
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
-# Set the working directory
 WORKDIR /usr/src/app
 
-# Copy the package.json and pnpm-lock.yaml
-COPY package.json pnpm-lock.yaml ./
+# Copy package.json and yarn.lock again for production
+COPY package.json ./ 
+COPY yarn.lock ./ 
 
-# Install pnpm and production dependencies
-RUN npm install -g pnpm
-RUN pnpm install --prod
+# Install Yarn in the production environment
+RUN apk add --no-cache yarn
 
-# Copy the built application from the development stage
+# Install only production dependencies with Yarn
+RUN yarn install --prod
+
+# Copy the built app from the development stage
 COPY --from=development /usr/src/app/dist ./dist
 
-# Set the entry point for production
+# Set the start command
 CMD ["node", "dist/apps/auth/main"]

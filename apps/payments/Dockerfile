@@ -6,13 +6,13 @@ WORKDIR /usr/src/app
 
 # Copy only the package.json and pnpm-lock.yaml to optimize caching
 COPY package.json ./
-COPY pnpm-lock.yaml ./
+COPY yarn.lock ./ 
 COPY tsconfig.json tsconfig.json
 COPY nest-cli.json nest-cli.json
 
 # Install pnpm and dependencies
-RUN npm install -g pnpm
-RUN pnpm install
+RUN apk add --no-cache yarn
+RUN yarn install
 
 # Copy the remaining application files
 # COPY . .
@@ -23,7 +23,7 @@ COPY libs libs
 RUN cd apps/payments && yarn install
 
 # Build the application
-RUN pnpm run build payments
+RUN yarn build payments
 
 # Production Stage
 FROM node:alpine AS production
@@ -36,11 +36,14 @@ ENV NODE_ENV=${NODE_ENV}
 WORKDIR /usr/src/app
 
 # Copy the package.json and pnpm-lock.yaml
-COPY package.json pnpm-lock.yaml ./
+COPY package.json ./ 
+COPY yarn.lock ./ 
 
 # Install pnpm and production dependencies
-RUN npm install -g pnpm
-RUN pnpm install --prod
+RUN apk add --no-cache yarn
+
+# Install only production dependencies with Yarn
+RUN yarn install --prod
 
 # Copy the built application from the development stage
 COPY --from=development /usr/src/app/dist ./dist
