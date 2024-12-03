@@ -19,6 +19,9 @@ RUN pnpm install
 COPY apps/notifications apps/notifications
 COPY libs libs
 
+# Install dependencies in the auth app using Yarn
+RUN cd apps/notifications && yarn install
+
 # Build the application
 RUN pnpm run build notifications
 

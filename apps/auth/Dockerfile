@@ -19,6 +19,9 @@ RUN pnpm install
 COPY apps/auth apps/auth
 COPY libs libs
 
+# Install dependencies in the auth app using Yarn
+RUN cd apps/auth && pnpm install
+
 # Build the application
 RUN pnpm run build auth
 

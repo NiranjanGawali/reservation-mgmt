@@ -19,6 +19,9 @@ RUN pnpm install
 COPY apps/payments apps/payments
 COPY libs libs
 
+# Install dependencies in the auth app using Yarn
+RUN cd apps/payments && yarn install
+
 # Build the application
 RUN pnpm run build payments
 
