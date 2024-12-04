@@ -1,9 +1,9 @@
 describe('Reservations', () => {
-    let jwt: string;
+    let cookie: string;
   
     beforeAll(async () => {
       const user = {
-        email: 'gawaliniranjan@gmail.com',
+        email: 'nir@gmail.com',
         password: 'Winter@123',
       };
       await fetch('http://auth:3001/users', {
@@ -20,19 +20,14 @@ describe('Reservations', () => {
           'Content-Type': 'application/json',
         },
       });
-      console.log('Login Reponse: ');
-      console.log(response);
-      
-      jwt = await response.text();
-      console.log('JWT : ', jwt);
 
-      let a = await response.json();
-      console.log('PRINTING A');
-      
-      console.log(a);
-      
-      
+      const setCookie = response.headers.get('set-cookie');
+      cookie = setCookie;
     });
+
+    test('test', () => {
+      expect(true).toBeTruthy()
+    })
   
     test('Create & Get', async () => {
       const createdReservation = await createReservation();
@@ -40,12 +35,13 @@ describe('Reservations', () => {
         `http://reservations:3000/reservations/${createdReservation._id}`,
         {
           headers: {
-            authentication: jwt,
+            'Cookie': cookie 
           },
         },
       );
       const reservation = await responseGet.json();
       expect(createdReservation).toEqual(reservation);
+      expect(reservation).toBeDefined();
     });
   
     const createReservation = async () => {
@@ -55,7 +51,7 @@ describe('Reservations', () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authentication: jwt,
+            'Cookie': cookie
           },
           body: JSON.stringify({
             "startDate": "12/20/2022",
@@ -67,9 +63,7 @@ describe('Reservations', () => {
             }
           }),
         },
-      );
-      console.log(responseCreate);
-      
+      );      
       expect(responseCreate.ok).toBeTruthy();
       return responseCreate.json();
     };
