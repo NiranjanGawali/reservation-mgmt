@@ -6,21 +6,21 @@ spec:
   rules:
     - http:
         paths:
-          - path: /reservations/*
+          - path: /reservations/
             pathType: Prefix
             backend: 
               service:
                 name: reservations
                 port: 
                   number: 3000
-          - path: /auth/*
+          - path: /auth/
             pathType: Prefix
             backend: 
               service:
                 name: auth-http
                 port: 
                   number: 3001
-          - path: /payments/*
+          - path: /payments/
             pathType: Prefix
             backend: 
               service:
