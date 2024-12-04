@@ -7,23 +7,23 @@ spec:
     - http:
         paths:
           - path: /reservations/*
-            pathType: ImplementationSpecific
+            pathType: Prefix
             backend: 
               service:
                 name: reservations
                 port: 
                   number: 3000
           - path: /auth/*
-            pathType: ImplementationSpecific
+            pathType: Prefix
             backend: 
               service:
                 name: auth-http
                 port: 
                   number: 3001
           - path: /payments/*
-            pathType: ImplementationSpecific
+            pathType: Prefix
             backend: 
               service:
-                name: auth-http
+                name: payments-http
                 port: 
                   number: 3004
