@@ -3,7 +3,7 @@ import { PaymentsController } from './payments.controller';
 import { PaymentsService } from './payments.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
-import { LoggerModule, NOTIFICATIONS_SERVICE } from '@app/core-lib';
+import { HealthModule, LoggerModule, NOTIFICATIONS_SERVICE } from '@app/core-lib';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 @Module({
   imports: [
@@ -33,6 +33,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         inject: [ConfigService],
       },
     ]),
+    HealthModule
   ],
   controllers: [PaymentsController],
   providers: [PaymentsService],
