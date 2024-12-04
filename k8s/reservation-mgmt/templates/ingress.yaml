@@ -20,3 +20,10 @@ spec:
                 name: auth-http
                 port: 
                   number: 3001
+          - path: /payments/*
+            pathType: ImplementationSpecific
+            backend: 
+              service:
+                name: auth-http
+                port: 
+                  number: 3004
