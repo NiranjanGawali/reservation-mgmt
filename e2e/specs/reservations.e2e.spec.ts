@@ -20,7 +20,18 @@ describe('Reservations', () => {
           'Content-Type': 'application/json',
         },
       });
+      console.log('Login Reponse: ');
+      console.log(response);
+      
       jwt = await response.text();
+      console.log('JWT : ', jwt);
+
+      let a = await response.json();
+      console.log('PRINTING A');
+      
+      console.log(a);
+      
+      
     });
   
     test('Create & Get', async () => {
@@ -47,19 +58,13 @@ describe('Reservations', () => {
             Authentication: jwt,
           },
           body: JSON.stringify({
-            startDate: '02-01-2023',
-            endDate: '02-05-2023',
-            placeId: '123',
-            invoiceId: '123',
-            charge: {
-              amount: 13,
-              card: {
-                cvc: '413',
-                exp_month: 12,
-                exp_year: 2027,
-                number: '4242 4242 4242 4242',
-              },
-            },
+            "startDate": "12/20/2022",
+            "endDate": "12/25/2022",
+            "placeId": "1234",
+            "invoiceId": "495",
+            "checkoutPayment": {
+                "amount": 1
+            }
           }),
         },
       );
