@@ -12,7 +12,7 @@ import {
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
-import { CurrentUser, JwtAuthGuard, UserDto } from '@app/core-lib';
+import { CurrentUser, JwtAuthGuard, Roles, UserDto } from '@app/core-lib';
 
 @Controller('reservations')
 export class ReservationsController {
@@ -53,6 +53,7 @@ export class ReservationsController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
+  @Roles('Admin')
   async remove(@Param('id') id: string) {
     return this.reservationsService.remove(id);
   }
