@@ -28,12 +28,10 @@ describe('Health', () => {
     });
   });
 
-  // test('Payments  ', async () => {
-  //   const response = await fetch('http://payments:3004');
-  //   console.log(response);
-    
-  //   expect(response.ok).toBeTruthy()
-  // })
+  test('Payments  ', async () => {
+    const response = await fetch('http://payments:3004');    
+    expect(response.ok).toBeTruthy()
+  })
 
   test('Notifications TCP', (done) => {
     ping({ address: 'notifications', port: 3005 }, (err) => {
