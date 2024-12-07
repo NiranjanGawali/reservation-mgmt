@@ -12,9 +12,6 @@ services:
       - '9229:9229'
     volumes:
       - .:/usr/src/app
-    # volumes:
-    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/reservations:/usr/src/app/apps/reservations
-    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/reservations/node_modules
     environment:
       - NODE_ENV=development
 
@@ -31,9 +28,6 @@ services:
       - '3002:3002'
     volumes:
       - .:/usr/src/app
-    # volumes:
-    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/auth:/usr/src/app/apps/auth
-    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/auth/node_modules
     environment:
       - NODE_ENV=development
 
@@ -50,9 +44,6 @@ services:
       - '3004:3004'
     volumes:
       - .:/usr/src/app
-    # volumes:
-    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/payments:/usr/src/app/apps/payments
-    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/payments/node_modules
     environment:
       - NODE_ENV=development
 
@@ -66,18 +57,17 @@ services:
       - ./apps/notifications/.env
     volumes:
       - .:/usr/src/app
-    # volumes:
-    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/payments:/usr/src/app/apps/payments
-    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/payments/node_modules
     environment:
       - NODE_ENV=development
 
-  mongo:
-    image: mongo
+  mysql:
+    image: mysql
     ports:
-      - '27018:27017'
-    volumes:
-      - mongo_data:/data/db
+      - '3306:3306'
+    env_file:
+      - .env
+    # volumes:
+    #   - mysql_data:/var/lib/mysql
 
-volumes:
-  mongo_data:
+# volumes:
+#   mysql_data:

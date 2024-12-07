@@ -3,20 +3,22 @@ import {
   UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto';
+import { CreateUserDto, GetUserDto } from './dto';
 import { UsersRepository } from './users.repository';
 import * as brypt from 'bcryptjs';
-import { GetUserDto } from './dto';
+import { Role, User } from '@app/core-lib';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly userRepository: UsersRepository) {}
   async create(createUserDto: CreateUserDto) {
     await this.validateCreateUserDto(createUserDto);
-    return this.userRepository.create({
+    const user = new User({
       ...createUserDto,
       password: await brypt.hash(createUserDto.password, 10),
+      roles: createUserDto.roles?.map((roleDto) => new Role(roleDto)),
     });
+    return this.userRepository.create(user);
   }
 
   private async validateCreateUserDto(createUserDto: CreateUserDto) {
@@ -38,6 +40,6 @@ export class UsersService {
   }
 
   async getUser(getUserDto: GetUserDto) {
-    return await this.userRepository.findOne(getUserDto);
+    return await this.userRepository.findOne(getUserDto, { roles: true });
   }
 }
