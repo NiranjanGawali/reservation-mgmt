@@ -4,127 +4,80 @@ services:
       context: .
       dockerfile: ./apps/reservations/Dockerfile
       target: development
-    command: pnpm run start:debug reservations # Changed from pnpm to yarn
+    command: pnpm run start:debug reservations
     env_file:
       - ./apps/reservations/.env
     ports:
       - '3000:3000'
       - '9229:9229'
+    volumes:
+      - .:/usr/src/app
     # volumes:
-    #   - .:/usr/src/app # This allows code changes in the local file system to sync with the container
-    #   - /usr/src/app/node_modules # This ensures node_modules is not overwritten by the volume
-    develop:
-      watch:
-        # Sync changes in the source code
-        - action: sync
-          path: ./apps/reservations
-          target: /usr/src/app/apps/reservations
-          ignore:
-            - node_modules/
-
-        # Rebuild if package.json changes
-        - action: rebuild
-          path: ./package.json
-
-        # Optionally restart when config files like .env change (if needed)
-        - action: sync+restart
-          path: ./apps/reservations/.env
-          target: /usr/src/app/apps/reservations/.env
+    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/reservations:/usr/src/app/apps/reservations
+    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/reservations/node_modules
+    environment:
+      - NODE_ENV=development
 
   auth:
     build:
       context: .
       dockerfile: ./apps/auth/Dockerfile
       target: development
-    command: pnpm run start:dev auth # Changed from pnpm to yarn
+    command: pnpm run start:dev auth
     env_file:
       - ./apps/auth/.env
     ports:
       - '3001:3001'
       - '3002:3002'
+    volumes:
+      - .:/usr/src/app
     # volumes:
-    #   - .:/usr/src/app # This allows code changes in the local file system to sync with the container
-    #   - /usr/src/app/node_modules # This ensures node_modules is not overwritten by the volume
-    develop:
-      watch:
-        # Sync changes in the source code
-        - action: sync
-          path: ./apps/auth
-          target: /usr/src/app/apps/auth
-          ignore:
-            - node_modules/
-
-        # Rebuild if package.json changes
-        - action: rebuild
-          path: ./package.json
-
-        # Optionally restart when config files like .env change (if needed)
-        - action: sync+restart
-          path: ./apps/auth/.env
-          target: /usr/src/app/apps/auth/.env
+    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/auth:/usr/src/app/apps/auth
+    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/auth/node_modules
+    environment:
+      - NODE_ENV=development
 
   payments:
     build:
       context: .
       dockerfile: ./apps/payments/Dockerfile
       target: development
-    command: pnpm run start:dev payments # Changed from pnpm to yarn
+    command: pnpm run start:dev payments
     env_file:
       - ./apps/payments/.env
     ports:
       - '3003:3003'
       - '3004:3004'
+    volumes:
+      - .:/usr/src/app
     # volumes:
-    #   - .:/usr/src/app # This allows code changes in the local file system to sync with the container
-    #   - /usr/src/app/node_modules # This ensures node_modules is not overwritten by the volume
-    develop:
-      watch:
-        # Sync changes in the source code
-        - action: sync
-          path: ./apps/payments
-          target: /usr/src/app/apps/payments
-          ignore:
-            - node_modules/
-
-        # Rebuild if package.json changes
-        - action: rebuild
-          path: ./package.json
-
-        # Optionally restart when config files like .env change (if needed)
-        - action: sync+restart
-          path: ./apps/payments/.env
-          target: /usr/src/app/apps/payments/.env
+    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/payments:/usr/src/app/apps/payments
+    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/payments/node_modules
+    environment:
+      - NODE_ENV=development
 
   notifications:
     build:
       context: .
       dockerfile: ./apps/notifications/Dockerfile
       target: development
-    command: pnpm run start:dev notifications # Changed from pnpm to yarn
+    command: pnpm run start:dev notifications
     env_file:
       - ./apps/notifications/.env
+    volumes:
+      - .:/usr/src/app
     # volumes:
-    #   - .:/usr/src/app # This allows code changes in the local file system to sync with the container
-    #   - /usr/src/app/node_modules # This ensures node_modules is not overwritten by the volume
-    develop:
-      watch:
-        # Sync changes in the source code
-        - action: sync
-          path: ./apps/notifications
-          target: /usr/src/app/apps/notifications
-          ignore:
-            - node_modules/
-
-        # Rebuild if package.json changes
-        - action: rebuild
-          path: ./package.json
-
-        # Optionally restart when config files like .env change (if needed)
-        - action: sync+restart
-          path: ./apps/notifications/.env
-          target: /usr/src/app/apps/notifications/.env
+    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/payments:/usr/src/app/apps/payments
+    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/payments/node_modules
+    environment:
+      - NODE_ENV=development
 
   mongo:
     image: mongo
     ports:
       - '27018:27017'
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
