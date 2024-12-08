@@ -8,7 +8,12 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import {
+  Ctx,
+  MessagePattern,
+  Payload,
+  RmqContext,
+} from '@nestjs/microservices';
 import { CreateCheckoutDto } from './dto/create-checkout.dto';
 
 @Controller('payments')
@@ -17,7 +22,14 @@ export class PaymentsController {
 
   @MessagePattern('checkout_payment')
   @UsePipes(new ValidationPipe())
-  async checkOut(@Payload() data: CreateCheckoutDto) {
+  async checkOut(
+    @Payload() data: CreateCheckoutDto,
+    @Ctx() context: RmqContext,
+  ) {
+    const channel = context.getChannelRef();
+    const originalMessage = context.getMessage();
+    // console.log('MESSAGE : ', originalMessage);
+    channel.ack(originalMessage);
     return await this.paymentsService.checkOut(data);
   }
 

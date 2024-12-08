@@ -12,10 +12,11 @@ async function bootstrap() {
   app.use(cookieParser());
 
   app.connectMicroservice({
-    transport: Transport.TCP,
+    transport: Transport.RMQ,
     options: {
-      host: '0.0.0.0',
-      port: configService.get('PAYMENTS_TCP_PORT'),
+      urls: [configService.getOrThrow('RABBITMQ_URI')],
+      noAck: false,
+      queue: 'payments',
     },
   });
 
