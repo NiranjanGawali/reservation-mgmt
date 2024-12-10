@@ -50,5 +50,8 @@ RUN pnpm install --prod
 # Copy the built application from the development stage
 COPY --from=development /usr/src/app/dist ./dist
 
+# Copy proto files
+COPY proto proto
+
 # Set the entry point for production
 CMD ["node", "dist/apps/notifications/main"]

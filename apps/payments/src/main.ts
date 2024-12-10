@@ -5,6 +5,8 @@ import { ConfigService } from '@nestjs/config';
 import { Logger } from 'nestjs-pino';
 import * as cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
+import { PAYMENTS_PACKAGE_NAME } from '@app/core-lib';
+import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create(PaymentsModule);
@@ -12,10 +14,11 @@ async function bootstrap() {
   app.use(cookieParser());
 
   app.connectMicroservice({
-    transport: Transport.TCP,
+    transport: Transport.GRPC,
     options: {
-      host: '0.0.0.0',
-      port: configService.get('PAYMENTS_TCP_PORT'),
+      package: PAYMENTS_PACKAGE_NAME,
+      protoPath: join(__dirname, '../../../proto/payments.proto'),
+      url: configService.getOrThrow('PAYMENTS_GRPC_URL'),
     },
   });
 

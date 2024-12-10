@@ -10,14 +10,18 @@ import {
 import { PaymentsService } from './payments.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CreateCheckoutDto } from './dto/create-checkout.dto';
+import {
+  PaymentsServiceController,
+  PaymentsServiceControllerMethods,
+} from '@app/core-lib';
 
 @Controller('payments')
-export class PaymentsController {
+@PaymentsServiceControllerMethods()
+export class PaymentsController implements PaymentsServiceController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
-  @MessagePattern('checkout_payment')
   @UsePipes(new ValidationPipe())
-  async checkOut(@Payload() data: CreateCheckoutDto) {
+  async checkOut(data: CreateCheckoutDto) {
     return await this.paymentsService.checkOut(data);
   }
 

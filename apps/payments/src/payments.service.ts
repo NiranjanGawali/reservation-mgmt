@@ -1,7 +1,10 @@
-import { NOTIFICATIONS_SERVICE } from '@app/core-lib';
+import {
+  NOTIFICATIONS_SERVICE_NAME,
+  NotificationsServiceClient,
+} from '@app/core-lib';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientGrpc } from '@nestjs/microservices';
 import { validatePaymentVerification } from 'razorpay/dist/utils/razorpay-utils';
 import { CreateCheckoutDto } from './dto/create-checkout.dto';
 // import Razorpay from 'razorpay';
@@ -9,12 +12,13 @@ const Razorpay = require('razorpay');
 
 @Injectable()
 export class PaymentsService {
+  private notificationService: NotificationsServiceClient;
   private readonly razorpay: any;
 
   constructor(
     private readonly configService: ConfigService,
-    @Inject(NOTIFICATIONS_SERVICE)
-    private readonly notificationService: ClientProxy,
+    @Inject(NOTIFICATIONS_SERVICE_NAME)
+    private readonly client: ClientGrpc,
   ) {
     this.razorpay = new Razorpay({
       key_id: this.configService.get('RAZORPAY_API_KEY'),
@@ -35,11 +39,20 @@ export class PaymentsService {
       const order = await this.razorpay.orders.create(options);
       console.log('Order : ', order);
 
+      if (!this.notificationService) {
+        this.notificationService =
+          this.client.getService<NotificationsServiceClient>(
+            NOTIFICATIONS_SERVICE_NAME,
+          );
+      }
+
       // calling notification service
-      this.notificationService.emit('notify_email', {
-        email,
-        text: `Your payment of rupees ${amount} has completed successfully !!!`,
-      });
+      this.notificationService
+        .notifiyEmail({
+          email,
+          text: `Your payment of rupees ${amount} has completed successfully !!!`,
+        })
+        .subscribe(() => {});
 
       return order;
     } catch (err) {

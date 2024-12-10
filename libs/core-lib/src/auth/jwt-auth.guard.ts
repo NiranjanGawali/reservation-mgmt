@@ -1,19 +1,37 @@
-import { CanActivate, ExecutionContext, Inject, Logger, UnauthorizedException } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Inject,
+  Logger,
+  OnModuleInit,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { catchError, map, Observable, of, tap } from 'rxjs';
-import { AUTH_SERVICE } from '../constants';
-import { ClientProxy } from '@nestjs/microservices';
-import { UserDto } from '../dto';
+import { ClientGrpc } from '@nestjs/microservices';
 import { Reflector } from '@nestjs/core';
+import { AUTH_SERVICE_NAME, AuthServiceClient } from '../types';
 
-export class JwtAuthGuard implements CanActivate {
+export class JwtAuthGuard implements CanActivate, OnModuleInit {
   private readonly logger = new Logger(JwtAuthGuard.name);
 
-  constructor(@Inject(AUTH_SERVICE) private readonly authClient: ClientProxy, private reflector: Reflector) {}
+  private authService: AuthServiceClient;
+
+  constructor(
+    @Inject(AUTH_SERVICE_NAME) private readonly client: ClientGrpc,
+    private reflector: Reflector,
+  ) {}
+
+  onModuleInit() {
+    this.authService =
+      this.client.getService<AuthServiceClient>(AUTH_SERVICE_NAME);
+  }
 
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const jwt = context.switchToHttp().getRequest().cookies?.Authentication || context.switchToHttp().getRequest().headers?.authentication;
+    const jwt =
+      context.switchToHttp().getRequest().cookies?.Authentication ||
+      context.switchToHttp().getRequest().headers?.authentication;
 
     if (!jwt) {
       return false;
@@ -21,26 +39,27 @@ export class JwtAuthGuard implements CanActivate {
 
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
 
-    return this.authClient
-      .send<UserDto>('authenticate', { Authentication: jwt })
-      .pipe(
-        tap((res) => {
-          if (roles) {
-            for (const role of roles) {
-              if (!res.roles?.includes(role)) {
-                  this.logger.error('The user does not have valid roles.');
-                  throw new UnauthorizedException();            
-              }
+    return this.authService.authenticate({ Authentication: jwt }).pipe(
+      tap((res) => {
+        if (roles) {
+          for (const role of roles) {
+            if (!res.roles?.includes(role)) {
+              this.logger.error('The user does not have valid roles.');
+              throw new UnauthorizedException();
             }
           }
-          context.switchToHttp().getRequest().user = res;
-        }),
-        map(() => true),
-        catchError((err) => {
-          console.error('Microservice error:', err);
-          this.logger.error(err);
-          return of(false); // Return false to deny access on error
-        }),
-      );
+        }
+        context.switchToHttp().getRequest().user = {
+          ...res,
+          _id: res.id,
+        };
+      }),
+      map(() => true),
+      catchError((err) => {
+        console.error('Microservice error:', err);
+        this.logger.error(err);
+        return of(false); // Return false to deny access on error
+      }),
+    );
   }
 }

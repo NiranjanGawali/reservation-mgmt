@@ -45,5 +45,8 @@ RUN pnpm install --prod
 # Copy the built app from the development stage
 COPY --from=development /usr/src/app/dist ./dist
 
+# Copy proto folders
+COPY proto proto
+
 # Set the start command
 CMD ["node", "dist/apps/auth/main"]

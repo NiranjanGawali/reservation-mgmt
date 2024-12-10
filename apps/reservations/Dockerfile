@@ -47,5 +47,8 @@ RUN pnpm install --prod
 # Copy the built application from the development stage
 COPY --from=development /usr/src/app/dist ./dist
 
+#copy the proto
+COPY proto proto
+
 # Set the entry point for production
 CMD ["node", "dist/apps/reservations/main"]

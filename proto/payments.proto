@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package payments;
+
+service PaymentsService {
+    rpc CheckOut(CreateChareMessage) returns (CreateChargeResponse) {}
+}
+
+message CreateChareMessage {
+    string email = 1;
+    int32 amount = 2;
+}
+
+message CreateChargeResponse {
+    string id = 1;
+}
