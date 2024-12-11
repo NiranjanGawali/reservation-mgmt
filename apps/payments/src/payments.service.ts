@@ -73,4 +73,12 @@ export class PaymentsService {
       throw new BadRequestException('Payment Failed!');
     }
   }
+
+  async getPayments() {
+    const payments = await this.razorpay.orders.all();
+    console.log('PAYMENTS - ');
+    console.log(payments);
+
+    return payments;
+  }
 }
