@@ -10,8 +10,8 @@ COPY pnpm-lock.yaml ./
 COPY tsconfig.json tsconfig.json
 COPY nest-cli.json nest-cli.json
 
-# Install Yarn using Alpine's package manager
-RUN npm install -g pnpm
+# Install pnpm and NestJS CLI globally
+RUN npm install -g pnpm @nestjs/cli
 
 # Install dependencies using Yarn
 RUN pnpm install

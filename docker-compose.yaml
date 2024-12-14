@@ -4,7 +4,8 @@ services:
       context: .
       dockerfile: ./apps/reservations/Dockerfile
       target: development
-    command: pnpm run start:debug reservations
+    # command: pnpm run start:dev reservations
+    command: pnpm run start:debug:reservations reservations
     env_file:
       - ./apps/reservations/.env
     ports:
@@ -12,9 +13,6 @@ services:
       - '9229:9229'
     volumes:
       - .:/usr/src/app
-    # volumes:
-    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/reservations:/usr/src/app/apps/reservations
-    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/reservations/node_modules
     environment:
       - NODE_ENV=development
 
@@ -23,17 +21,16 @@ services:
       context: .
       dockerfile: ./apps/auth/Dockerfile
       target: development
-    command: pnpm run start:dev auth
+    # command: pnpm run start:dev auth
+    command: pnpm run start:debug:auth auth
     env_file:
       - ./apps/auth/.env
     ports:
       - '3001:3001'
       - '3002:3002'
+      - '9230:9230'
     volumes:
       - .:/usr/src/app
-    # volumes:
-    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/auth:/usr/src/app/apps/auth
-    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/auth/node_modules
     environment:
       - NODE_ENV=development
 
@@ -42,17 +39,16 @@ services:
       context: .
       dockerfile: ./apps/payments/Dockerfile
       target: development
-    command: pnpm run start:dev payments
+    # command: pnpm run start:dev payments
+    command: pnpm run start:debug:payments payments
     env_file:
       - ./apps/payments/.env
     ports:
       - '3003:3003'
       - '3004:3004'
+      - '9231:9231'
     volumes:
       - .:/usr/src/app
-    # volumes:
-    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/payments:/usr/src/app/apps/payments
-    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/payments/node_modules
     environment:
       - NODE_ENV=development
 
@@ -61,21 +57,21 @@ services:
       context: .
       dockerfile: ./apps/notifications/Dockerfile
       target: development
-    command: pnpm run start:dev notifications
+    # command: pnpm run start:dev notifications
+    command: pnpm run start:debug:notifications notifications
     env_file:
       - ./apps/notifications/.env
+    ports:
+      - '9232:9232'
     volumes:
       - .:/usr/src/app
-    # volumes:
-    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/payments:/usr/src/app/apps/payments
-    #   - /mnt/volumeE/study-folder/NestJS/ReservationMangement/reservation-mgmt/apps/payments/node_modules
     environment:
       - NODE_ENV=development
 
   mongo:
     image: mongo
     ports:
-      - '27018:27017'
+      - '27017:27017'
     volumes:
       - mongo_data:/data/db
 

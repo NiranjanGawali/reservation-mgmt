@@ -1,19 +1,93 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "node",
-            "request": "attach",
-            "name": "Debug NodeJS Docker",
-            "address": "localhost",
-            "port": 9229,
-            "sourceMaps": true,
-            "restart": true,
-            "localRoot": "${workspaceFolder}",
-            "remoteRoot": "/usr/src/app"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    // Configuration for locally running the app
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Reservations Service Locally",
+      "address": "localhost",
+      "port": 9229,
+      "sourceMaps": true,
+      "restart": true,
+      "localRoot": "${workspaceFolder}/apps/reservations", // Local source directory
+      "remoteRoot": null
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Auth Service Locally",
+      "address": "localhost",
+      "port": 9230,
+      "sourceMaps": true,
+      "restart": true,
+      "localRoot": "${workspaceFolder}/apps/auth", // Local source directory
+      "remoteRoot": null
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Payments Service Locally",
+      "address": "localhost",
+      "port": 9231,
+      "sourceMaps": true,
+      "restart": true,
+      "localRoot": "${workspaceFolder}/apps/payments", // Local source directory
+      "remoteRoot": null
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Notifications Service Locally",
+      "address": "localhost",
+      "port": 9232,
+      "sourceMaps": true,
+      "restart": true,
+      "localRoot": "${workspaceFolder}/apps/notifications", // Local source directory
+      "remoteRoot": null
+    },
+
+    // Configuration for Docker Compose setup
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Reservations Service Docker",
+      "address": "localhost",
+      "port": 9229,
+      "sourceMaps": true,
+      "restart": true,
+      "localRoot": "${workspaceFolder}", // Local source directory for the project
+      "remoteRoot": "/usr/src/app" // Remote source directory in the container
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Auth Service Docker",
+      "port": 9230,
+      "sourceMaps": true,
+      "restart": true,
+      "localRoot": "${workspaceFolder}", // Local source directory for the project
+      "remoteRoot": "/usr/src/app" // Remote source directory in the container
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Payments Service Docker",
+      "port": 9231,
+      "sourceMaps": true,
+      "restart": true,
+      "localRoot": "${workspaceFolder}", // Local source directory for the project
+      "remoteRoot": "/usr/src/app" // Remote source directory in the container
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Notifications Service Docker",
+      "port": 9232,
+      "sourceMaps": true,
+      "restart": true,
+      "localRoot": "${workspaceFolder}", // Local source directory for the project
+      "remoteRoot": "/usr/src/app" // Remote source directory in the container
+    }
+  ]
 }
